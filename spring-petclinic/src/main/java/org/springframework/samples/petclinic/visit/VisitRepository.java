@@ -15,10 +15,15 @@
  */
 package org.springframework.samples.petclinic.visit;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Collection;
 
+import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.samples.petclinic.model.BaseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Repository class for <code>Visit</code> domain objects All method names are compliant
@@ -31,21 +36,21 @@ import org.springframework.stereotype.Service;
  * @author Sam Brannen
  * @author Michael Isvy
  */
-@Service
-public class VisitRepository {
+@FeignClient(name = "visit-repository", url = "http://localhost:8086")
+public interface VisitRepository {
 
 	/**
 	 * Save a <code>Visit</code> to the data store, either inserting or updating it.
 	 * @param visit the <code>Visit</code> to save
 	 * @see BaseEntity#isNew
 	 */
-	void save(Visit visit) {
-		
-	}
 
-	public List<Visit> findByPetId(Integer petId) {
-		return null;
-		
-	}
+	@PostMapping("/visits")
+	void save(@RequestParam("date") LocalDate date, @RequestParam("description") String description,
+			@RequestParam("petId") Integer petId);
+
+	
+	@GetMapping("/visits/findByPetId/{petId}")
+	public Collection<Visit> findByPetId(@PathVariable("petId") Integer petId);
 
 }

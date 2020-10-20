@@ -84,7 +84,7 @@ class VisitController {
 			return "pets/createOrUpdateVisitForm";
 		}
 		else {
-			this.visits.save(visit);
+			this.visits.save(visit.getDate(), visit.getDescription(), visit.getPetId());
 			return "redirect:/owners/{ownerId}";
 		}
 	}

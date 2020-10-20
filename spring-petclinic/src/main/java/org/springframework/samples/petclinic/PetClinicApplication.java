@@ -18,6 +18,7 @@ package org.springframework.samples.petclinic;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 
 /**
  * PetClinic Spring Boot Application.
@@ -25,6 +26,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Dave Syer
  *
  */
+@EnableFeignClients
 @SpringBootApplication(proxyBeanMethods = false)
 public class PetClinicApplication {
 
