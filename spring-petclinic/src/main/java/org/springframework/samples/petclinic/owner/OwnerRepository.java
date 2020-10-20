@@ -15,12 +15,13 @@
  */
 package org.springframework.samples.petclinic.owner;
 
-import java.util.Arrays;
 import java.util.Collection;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * Repository class for <code>Owner</code> domain objects All method names are
@@ -33,28 +34,16 @@ import org.springframework.web.client.RestTemplate;
  * @author Sam Brannen
  * @author Michael Isvy
  */
-@Service
-public class OwnerRepository {
+@FeignClient(name = "owner-service", url = "http://localhost:8085")
+public interface OwnerRepository {
 
-	Collection<Owner> findByLastName(String lastName) {
-		RestTemplate restTemplate = new RestTemplate();
-		String fooResourceUrl = "http://localhost:8085/owners/findByLastName/";
-		ResponseEntity<Owner[]> response = restTemplate.getForEntity(fooResourceUrl + lastName, Owner[].class);
-		return Arrays.asList(response.getBody());
-	}
+	@GetMapping("/owners/findByLastName/{lastName}")
+	Collection<Owner> findByLastName(@PathVariable("lastName") String lastName);
 
-	public Owner findById(Integer id) {
-		RestTemplate restTemplate = new RestTemplate();
-		String fooResourceUrl = "http://localhost:8085/owners/";
-		ResponseEntity<Owner> response = restTemplate.getForEntity(fooResourceUrl + id, Owner.class);
-		return response.getBody();
+	@GetMapping("/owners/{id}")
+	public Owner findById(@PathVariable("id") Integer id);
 
-	}
-
-	void save(Owner owner) {
-		RestTemplate restTemplate = new RestTemplate();
-		String fooResourceUrl = "http://localhost:8085/owners/";
-		restTemplate.postForEntity(fooResourceUrl, owner, Owner.class);
-	}
+	@PostMapping("/owners/")
+	void save(@RequestBody Owner owner);
 
 }
