@@ -77,5 +77,10 @@ class OwnerController {
 		}
 		
 	}
+	
+	@GetMapping("/owners/findByLastName/{lastName}")
+	public Iterable<Owner> findOwnerByLastName(@PathVariable("lastName") String lastName) {
+		return owners.findByLastName(lastName);
+	}
 
 }

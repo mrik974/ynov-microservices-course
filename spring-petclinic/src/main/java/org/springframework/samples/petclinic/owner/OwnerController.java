@@ -136,9 +136,9 @@ class OwnerController {
 	public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
 		Owner owner = this.owners.findById(ownerId);
-		for (Pet pet : owner.getPets()) {
-			pet.setVisitsInternal(visits.findByPetId(pet.getId()));
-		}
+		//for (Pet pet : owner.getPets()) {
+			//pet.setVisitsInternal(visits.findByPetId(pet.getId()));
+		//}
 		mav.addObject(owner);
 		return mav;
 	}
