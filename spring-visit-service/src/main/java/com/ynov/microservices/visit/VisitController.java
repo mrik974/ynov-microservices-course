@@ -65,5 +65,10 @@ class VisitController {
 	public void deleteVisit(@PathVariable("id") Integer id) {
 		visits.deleteById(id);
 	}
+	
+	@GetMapping("/visits/findByPetId/{petId}")
+	public Iterable<Visit> findByPetId(@PathVariable("petId") Integer petId) {
+		return visits.findByPetId(petId);
+	}
 
 }

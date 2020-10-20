@@ -18,7 +18,7 @@ package org.springframework.samples.petclinic.visit;
 import java.time.LocalDate;
 import java.util.Collection;
 
-import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
