@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.ribbon.proxy.annotation.Hystrix;
+
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Map;
@@ -75,7 +78,15 @@ class OwnerController {
 	}
 
 	@GetMapping("/owners/find")
-	public String initFindForm(Map<String, Object> model) {
+	@HystrixCommand(fallbackMethod = "initFindFormFallback")
+	public String initFindForm(Map<String, Object> model) throws InterruptedException {
+		Thread.sleep(1000);
+		model.put("owner", new Owner());
+		return "owners/findOwners";
+	}
+	
+	public String initFindFormFallback(Map<String, Object> model) {
+		System.out.println("Fallback Activated");
 		model.put("owner", new Owner());
 		return "owners/findOwners";
 	}
@@ -142,5 +153,7 @@ class OwnerController {
 		mav.addObject(owner);
 		return mav;
 	}
+	
+	
 
 }

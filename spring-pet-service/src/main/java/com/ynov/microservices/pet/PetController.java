@@ -16,30 +16,35 @@
 package com.ynov.microservices.pet;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author Juergen Hoeller
  * @author Ken Krebs
  * @author Arjen Poutsma
  */
-@Controller
-@RequestMapping("/owners/{ownerId}")
+@RestController
 class PetController {
 
 	private final PetRepository pets;
 
 	public PetController(PetRepository pets) {
 		this.pets = pets;
+	}
+	
+	@GetMapping("/pet-types")
+	List<PetType> findPetTypes() {
+		return pets.findPetTypes();
 	}
 
 	@GetMapping("/pets")
@@ -52,7 +57,12 @@ class PetController {
 		return pets.findById(id);
 	}
 
-	@PostMapping("/pets")
+	@PostMapping("/pets") 
+	public Pet addPet(@RequestBody Pet pet) {
+		return this.pets.save(pet);
+	}
+	
+	@PostMapping("/pets/new")
 	public Pet addPet(@RequestParam("firstName") String firstName, @RequestParam("ownerId") Integer ownerId,
 			@RequestParam("petType") PetType type, @RequestParam("birthDate") LocalDate birthDate) {
 		Pet pet = new Pet();

@@ -17,7 +17,10 @@ package org.springframework.samples.petclinic.pet;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * Repository class for <code>Pet</code> domain objects All method names are compliant
@@ -30,23 +33,16 @@ import org.springframework.stereotype.Service;
  * @author Sam Brannen
  * @author Michael Isvy
  */
-@Service
-public class PetRepository {
+@FeignClient(value = "pet-service")
+public interface PetRepository {
 
+	@GetMapping("/pet-types")
+	List<PetType> findPetTypes();
+
+	@GetMapping("/pets/{id}")
+	public Pet findById(@PathVariable("id") Integer id);
 	
-	List<PetType> findPetTypes() {
-		return null;
-		
-	}
-
-
-	public Pet findById(Integer id)  {
-		return null;
-		
-	}
-
-	void save(Pet pet) {
-		
-	}
+	@PostMapping("/pets")
+	void save(Pet pet);
 
 }

@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author Sam Brannen
  * @author Michael Isvy
  */
-@FeignClient(name = "visit-repository", url = "http://localhost:8086")
+@FeignClient(value = "visit-service")
 public interface VisitRepository {
 
 	/**

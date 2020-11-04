@@ -34,9 +34,10 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author Sam Brannen
  * @author Michael Isvy
  */
-@FeignClient(name = "owner-service", url = "http://localhost:8085")
+@FeignClient(value = "owner-service")
 public interface OwnerRepository {
 
+	
 	@GetMapping("/owners/findByLastName/{lastName}")
 	Collection<Owner> findByLastName(@PathVariable("lastName") String lastName);
 

@@ -17,7 +17,8 @@ package org.springframework.samples.petclinic.vet;
 
 import java.util.Collection;
 
-import org.springframework.stereotype.Service;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * Repository class for <code>Vet</code> domain objects All method names are compliant
@@ -30,14 +31,11 @@ import org.springframework.stereotype.Service;
  * @author Sam Brannen
  * @author Michael Isvy
  */
-@Service
-public class VetRepository {
 
+@FeignClient(value = "vet-service")
+public interface VetRepository {
 
-	//@Cacheable("vets")
-	Collection<Vet> findAll() {
-		return null;
-		
-	}
+	@GetMapping(path = { "/vets" }, produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+	Collection<Vet> findAll();
 
 }
