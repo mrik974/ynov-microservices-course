@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Repository class for <code>Owner</code> domain objects All method names are
@@ -37,7 +38,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(value = "owner-service")
 public interface OwnerRepository {
 
-	
 	@GetMapping("/owners/findByLastName/{lastName}")
 	Collection<Owner> findByLastName(@PathVariable("lastName") String lastName);
 
@@ -45,6 +45,9 @@ public interface OwnerRepository {
 	public Owner findById(@PathVariable("id") Integer id);
 
 	@PostMapping("/owners/")
-	void save(@RequestBody Owner owner);
+	Owner save(@RequestBody Owner owner);
+
+	@PostMapping("/owners/{ownerId}/addPet")
+	public void addPetToOwner(@PathVariable("ownerId") Integer ownerId, @RequestParam("petId") Integer petId);
 
 }

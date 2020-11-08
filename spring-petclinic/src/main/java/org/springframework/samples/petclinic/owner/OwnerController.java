@@ -15,7 +15,15 @@
  */
 package org.springframework.samples.petclinic.owner;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
 import org.springframework.samples.petclinic.pet.Pet;
+import org.springframework.samples.petclinic.pet.PetRepository;
 import org.springframework.samples.petclinic.visit.VisitRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,11 +36,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.ribbon.proxy.annotation.Hystrix;
-
-import javax.validation.Valid;
-import java.util.Collection;
-import java.util.Map;
 
 /**
  * @author Juergen Hoeller
@@ -48,10 +51,13 @@ class OwnerController {
 	private final OwnerRepository owners;
 
 	private VisitRepository visits;
+	
+	private PetRepository pets;
 
-	public OwnerController(OwnerRepository clinicService, VisitRepository visits) {
+	public OwnerController(OwnerRepository clinicService, VisitRepository visits, PetRepository pets) {
 		this.owners = clinicService;
 		this.visits = visits;
+		this.pets = pets;
 	}
 
 	@InitBinder
@@ -72,15 +78,15 @@ class OwnerController {
 			return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 		}
 		else {
-			this.owners.save(owner);
-			return "redirect:/owners/" + owner.getId();
+			Owner newOwner = this.owners.save(owner);
+			System.out.println(newOwner.getId());
+			return "redirect:/owners/" + newOwner.getId();
 		}
 	}
 
 	@GetMapping("/owners/find")
 	@HystrixCommand(fallbackMethod = "initFindFormFallback")
 	public String initFindForm(Map<String, Object> model) throws InterruptedException {
-		Thread.sleep(1000);
 		model.put("owner", new Owner());
 		return "owners/findOwners";
 	}
@@ -147,10 +153,14 @@ class OwnerController {
 	public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
 		Owner owner = this.owners.findById(ownerId);
-		//for (Pet pet : owner.getPets()) {
+		List<Pet> petsList = new ArrayList<>();
+		for (Integer petId : owner.getPets()) {
+			petsList.add(pets.findById(petId));
+			
 			//pet.setVisitsInternal(visits.findByPetId(pet.getId()));
-		//}
+		}
 		mav.addObject(owner);
+		mav.addObject("pets", petsList);
 		return mav;
 	}
 	

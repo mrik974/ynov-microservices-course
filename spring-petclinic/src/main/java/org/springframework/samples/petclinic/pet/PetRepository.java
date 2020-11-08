@@ -43,6 +43,6 @@ public interface PetRepository {
 	public Pet findById(@PathVariable("id") Integer id);
 	
 	@PostMapping("/pets")
-	void save(Pet pet);
+	Pet save(Pet pet);
 
 }

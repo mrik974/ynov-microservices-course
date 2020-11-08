@@ -96,7 +96,6 @@ class OwnerController {
 	@HystrixCommand(commandKey = "owner-service-find-by-last-name")
 	@GetMapping("/owners/findByLastName/{lastName}")
 	public Iterable<Owner> findOwnerByLastName(@PathVariable("lastName") String lastName) throws InterruptedException {
-		//Thread.sleep(1000);
 		return owners.findByLastName(lastName);
 	}	
 
