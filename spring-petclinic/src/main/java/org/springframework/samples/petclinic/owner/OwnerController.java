@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
 import org.springframework.samples.petclinic.pet.Pet;
 import org.springframework.samples.petclinic.pet.PetRepository;
 import org.springframework.samples.petclinic.visit.VisitRepository;
@@ -53,6 +54,8 @@ class OwnerController {
 	private VisitRepository visits;
 	
 	private PetRepository pets;
+	
+	private final static Logger logger = org.slf4j.LoggerFactory.getLogger("owner-controller");
 
 	public OwnerController(OwnerRepository clinicService, VisitRepository visits, PetRepository pets) {
 		this.owners = clinicService;
@@ -99,6 +102,7 @@ class OwnerController {
 
 	@GetMapping("/owners")
 	public String processFindForm(Owner owner, BindingResult result, Map<String, Object> model) {
+		logger.info("logging");
 
 		// allow parameterless GET request for /owners to return all records
 		if (owner.getLastName() == null) {
@@ -151,6 +155,7 @@ class OwnerController {
 	 */
 	@GetMapping("/owners/{ownerId}")
 	public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
+		logger.info("showing owner for id {}", ownerId);
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
 		Owner owner = this.owners.findById(ownerId);
 		List<Pet> petsList = new ArrayList<>();

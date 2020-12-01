@@ -19,6 +19,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,11 +41,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 class PetController {
 
-	private final PetRepository pets;
-
-	public PetController(PetRepository pets) {
-		this.pets = pets;
+	@Inject
+	private PetRepository pets;
+	
+	@PostConstruct
+	private void postConstruct() {
+		System.out.println(pets);
 	}
+	
+	private final static Logger logger = LoggerFactory.getLogger(PetController.class);
 	
 	@GetMapping("/pet-types")
 	List<PetType> findPetTypes() {
@@ -54,6 +63,7 @@ class PetController {
 
 	@GetMapping("/pets/{id}")
 	public Optional<Pet> getPetById(@PathVariable("id") Integer id) {
+		logger.info("getting pet for id {}", id);
 		return pets.findById(id);
 	}
 
